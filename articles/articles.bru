@@ -1,0 +1,25 @@
+meta {
+  name: articles
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/articles?limit={{paramPageSize}}&offset={{paramCurrentPage}}
+  body: none
+  auth: none
+}
+
+query {
+  limit: {{paramPageSize}}
+  offset: {{paramCurrentPage}}
+}
+
+vars:pre-request {
+  paramPageSize: 10
+  paramCurrentPage: 0
+}
+
+assert {
+  res.body.articles.filter(a => a.slug == bru.getVar("articleSlug")).length: eq 1
+}

@@ -1,0 +1,16 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+script:pre-request {
+  const login = require("./.scripts/login");
+  
+  if(!bru.getVar("token")){
+    const token = await login(bru.getEnvVar("username"), bru.getEnvVar("password"));
+    bru.setVar("token", token);
+  }
+}
