@@ -1,0 +1,21 @@
+meta {
+  name: article
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/articles/{{articleSlug}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  const articleInfo = res.getBody().article;
+  expect(articleInfo.slug).to.equal(bru.getVar("articleSlug"));
+  expect(articleInfo.author.username).to.equal("brunotestuser");
+}

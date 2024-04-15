@@ -1,0 +1,26 @@
+meta {
+  name: create-article
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/articles
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 201
+}
+
+script:pre-request {
+  const article = {"article":{"title":`TestArticle_${(new Date()).getTime()}`,"description":"This article is a test","body":"Article description","tagList":["test"]}};
+  
+  req.setBody(article);
+}
+
+script:post-response {
+  const articleSlug = res.body.article.slug;
+  bru.setVar("articleSlug", articleSlug);
+}

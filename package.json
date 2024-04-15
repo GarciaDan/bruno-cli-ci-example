@@ -1,0 +1,8 @@
+{
+  "name": "bruno-cli-ci-example",
+  "version": "1.0.0",
+  "description": "A simple Bruno CLI Workflow integration example",
+  "keywords": ["bruno", "test", "example"],
+  "author": "Daniel Garcia <dev@danigarcia.org>",
+  "license": "ISC"
+}

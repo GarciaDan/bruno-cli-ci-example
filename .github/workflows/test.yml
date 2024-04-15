@@ -1,0 +1,42 @@
+name: Bruno - Sample test pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      input-data:
+        description: "Input data"
+        required: false
+        
+env:
+  USERNAME: ${{ secrets.USERNAME }}
+  PASSWORD: ${{ secrets.PASSWORD }}
+
+jobs:
+  run-test:
+    environment: dev
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Cache node modules
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        uses: actions/setup-node@v3
+      - name: Install node modules
+        run: npm ci
+      - name: Install Bruno CLI
+        run: npm i -g @usebruno/cli
+      - name: Run Bruno tests
+        run: bru run --env brunotestuser --env-var USERNAME=${{ secrets.USERNAME }} --env-var PASSWORD=${{ secrets.PASSWORD }} --output test-result.html --format html
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: report
+          path: test-result.html
+
